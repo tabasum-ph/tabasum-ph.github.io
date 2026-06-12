@@ -19,7 +19,8 @@
     --muted: #5d6070;
     --accent: #2c3a8c;
     --star: #e8ddb5;
-    --sky-line: #5b6bb5;
+    --sky-line: #6d7dc9;
+    --wave: #9fc0ee;
     --hairline: #e2e1d9;
     --box-blue: #eaf3fb;
     --box-blue-edge: #7db5dd;
@@ -43,20 +44,21 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .wrap { max-width: 44rem; margin: 0 auto; padding: 0 1.25rem; }
 
-/* ============ HERO ============ */
+/* ============ HERO — fully generative night sky ============ */
 .hero {
     position: relative;
-    background:
-        linear-gradient(180deg, rgba(10,14,29,.55) 0%, rgba(10,14,29,.35) 55%, rgba(251,251,248,1) 100%),
-        url('img/hero-merger.jpg') center / cover no-repeat,
-        linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
     color: #eceadf;
     overflow: hidden;
-    min-height: 86vh;
+    min-height: 92vh;
     display: flex;
     flex-direction: column;
+    background:
+        radial-gradient(55% 45% at 78% 18%, rgba(85,105,200,.28), transparent 65%),
+        radial-gradient(45% 40% at 12% 70%, rgba(170,125,60,.10), transparent 60%),
+        radial-gradient(70% 55% at 45% 95%, rgba(60,80,170,.18), transparent 70%),
+        linear-gradient(180deg, var(--night) 0%, var(--night-2) 72%, var(--paper) 100%);
 }
-#stars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: .5; }
+#stars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .hero-nav {
     position: relative; z-index: 3;
     display: flex; flex-wrap: wrap; gap: .4rem 1.4rem;
@@ -64,43 +66,69 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     max-width: 60rem; margin: 0 auto; width: 100%;
     padding: 1.1rem 1.5rem;
 }
-.hero-nav .name { font-family: var(--sans); font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; color: #dde1f0; text-shadow: 0 1px 8px rgba(5,8,18,.8); }
+.hero-nav .name { font-family: var(--sans); font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; color: #cfd3e8; }
 .hero-nav nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
-.hero-nav nav a { font-family: var(--sans); font-size: .8rem; letter-spacing: .05em; color: #c3c9e4; text-shadow: 0 1px 8px rgba(5,8,18,.8); }
+.hero-nav nav a { font-family: var(--sans); font-size: .8rem; letter-spacing: .05em; color: #aab1d6; }
 .hero-nav nav a:hover { color: var(--star); text-decoration: none; }
 
 .hero-inner {
     position: relative; z-index: 2;
     flex: 1;
-    display: flex; align-items: center;
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 2rem;
+    align-items: center;
     max-width: 60rem; margin: 0 auto; width: 100%;
-    padding: 2rem 1.5rem 6rem;
+    padding: 1rem 1.5rem 1rem;
 }
-.hero-copy { max-width: 34rem; text-shadow: 0 1px 14px rgba(5,8,18,.85); }
 .hero h1 {
-    font-size: clamp(2.2rem, 5.8vw, 3.3rem);
-    font-weight: 600; line-height: 1.1;
+    font-size: clamp(2.1rem, 5.5vw, 3.2rem);
+    font-weight: 600; line-height: 1.12;
     margin: .6rem 0 .9rem;
 }
 .hero .eyebrow {
     font-family: var(--sans); font-size: .74rem; font-weight: 500;
     letter-spacing: .2em; text-transform: uppercase; color: var(--star);
 }
-.hero .tagline { font-size: 1.12rem; color: #d4d8ea; font-style: italic; }
-.hero .affil { font-family: var(--sans); font-size: .85rem; color: #aeb5d4; margin-top: 1.1rem; }
+.hero .tagline { font-size: 1.1rem; color: #c6cadf; max-width: 31rem; font-style: italic; }
+.hero .affil { font-family: var(--sans); font-size: .85rem; color: #8e95b8; margin-top: 1.1rem; }
 .hero-cta { margin-top: 1.6rem; display: flex; gap: .8rem; flex-wrap: wrap; }
 .hero-cta a {
     font-family: var(--sans); font-size: .85rem; letter-spacing: .03em;
-    padding: .5rem 1rem; border: 1px solid rgba(180,190,230,.55); color: #e8eaf6;
-    background: rgba(10,14,29,.35); backdrop-filter: blur(2px);
+    padding: .5rem 1rem; border: 1px solid #3a4373; color: #dfe2f2;
 }
 .hero-cta a:hover { border-color: var(--star); color: var(--star); text-decoration: none; }
-.hero-credit {
+
+/* celestial sphere — rotating wireframe */
+.sphere-box { display: flex; justify-content: center; position: relative; }
+.sphere-box svg { width: min(300px, 68vw); height: auto; overflow: visible; }
+.sphere-line { fill: none; stroke: var(--sky-line); stroke-width: .8; opacity: .55; }
+.sphere-eq { stroke: var(--star); stroke-width: 1; opacity: .85; }
+.lon { stroke-dasharray: 6 5; animation: spin 26s linear infinite; }
+.lon.l2 { animation-duration: 34s; animation-direction: reverse; }
+.lon.l3 { animation-duration: 44s; }
+@keyframes spin { to { stroke-dashoffset: -220; } }
+.sphere-glow { animation: breathe 7s ease-in-out infinite; transform-origin: center; }
+@keyframes breathe { 0%,100% { opacity:.9 } 50% { opacity:.5 } }
+@media (prefers-reduced-motion: reduce) { .lon, .sphere-glow { animation: none; } }
+.sphere-label { font-family: var(--sans); font-size: 10px; fill: #8e95b8; letter-spacing: .08em; }
+.const-dot { fill: #c9a86a; opacity: .8; }
+.const-line { stroke: #c9a86a; stroke-width: .5; opacity: .35; fill: none; }
+
+/* binary merger + live chirp strip */
+.merger-strip {
     position: relative; z-index: 2;
     max-width: 60rem; margin: 0 auto; width: 100%;
-    padding: 0 1.5rem 1rem;
-    font-family: var(--sans); font-size: .68rem; letter-spacing: .06em;
-    color: #8089ad; text-transform: uppercase;
+    padding: 0 1.5rem .4rem;
+}
+#merger { width: 100%; height: 150px; display: block; }
+.merger-cap {
+    display: block;
+    font-family: var(--sans); font-size: .7rem; color: #7e85a8;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 0 1.5rem 1.1rem;
+    max-width: 60rem; margin: 0 auto; width: 100%;
+    position: relative; z-index: 2;
 }
 
 /* ============ BODY ============ */
@@ -154,7 +182,6 @@ figure.diagram figcaption {
     font-family: var(--sans); font-size: .78rem; color: var(--muted); margin-top: .55rem;
     max-width: 32rem; margin-left: auto; margin-right: auto;
 }
-.dg-line { stroke: var(--ink); stroke-width: 1.1; fill: none; }
 .dg-accent { stroke: var(--accent); stroke-width: 1.2; fill: none; }
 .dg-arrow { stroke: var(--ink); stroke-width: 1.1; fill: none; marker-end: url(#arrhead); }
 .dg-arrow-green { stroke: #2e7d4f; stroke-width: 1.4; fill: none; marker-end: url(#arrgreen); }
@@ -162,7 +189,6 @@ figure.diagram figcaption {
 .dg-arrow-warm { stroke: #a8763e; stroke-width: 1.2; stroke-dasharray: 2.5 3; fill: none; marker-end: url(#arrwarm); }
 .dg-dashed-grey { stroke: #b9b9b2; stroke-width: 1.2; stroke-dasharray: 5 5; fill: none; }
 .dg-text { font-family: var(--sans); font-size: 11px; fill: var(--ink); }
-.dg-text-sm { font-family: var(--sans); font-size: 9.5px; fill: var(--muted); }
 .dg-math { font-family: var(--serif); font-style: italic; font-size: 13px; fill: var(--ink); }
 .dg-math-sm { font-family: var(--serif); font-style: italic; font-size: 10.5px; fill: var(--muted); }
 .dg-fill { fill: rgba(44,58,140,.05); stroke: none; }
@@ -202,7 +228,10 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 
 @media (max-width: 720px) {
     .hero { min-height: 0; }
-    .hero-inner { padding-bottom: 3.5rem; }
+    .hero-inner { grid-template-columns: 1fr; padding-bottom: .5rem; }
+    .sphere-box { order: -1; }
+    .sphere-box svg { width: min(200px, 52vw); }
+    #merger { height: 110px; }
 }
 </style>
 </head>
@@ -226,18 +255,49 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
     </div>
 
     <div class="hero-inner">
-        <div class="hero-copy">
+        <div>
             <span class="eyebrow">Theoretical physicist · Gravitational waves &amp; quantum gravity</span>
             <h1>The sky is the&nbsp;boundary.</h1>
             <p class="tagline">The theory behind what LIGO and LISA hear: the asymptotic structure of spacetime, the symmetries and memories carried by gravitational waves, and the multipolar post-Minkowskian construction of the metrics behind the signal.</p>
             <p class="affil">QUC Research Fellow, Korea Institute for Advanced Study (KIAS), Seoul</p>
             <div class="hero-cta">
                 <a href="#research">Explore the research</a>
-                <a href="Tabasum_CV.pdf">Curriculum Vitae</a>
+                <a href="CV_Tabasum_26.pdf">Curriculum Vitae</a>
             </div>
         </div>
+
+        <!-- rotating celestial sphere with constellation accents -->
+        <div class="sphere-box" aria-hidden="true">
+            <svg viewBox="0 0 260 250">
+                <!-- constellation accents (gold, echoing star charts) -->
+                <circle class="const-dot" cx="22"  cy="38"  r="2"/>
+                <circle class="const-dot" cx="48"  cy="22"  r="1.4"/>
+                <circle class="const-dot" cx="70"  cy="44"  r="1.8"/>
+                <circle class="const-dot" cx="236" cy="190" r="2"/>
+                <circle class="const-dot" cx="214" cy="214" r="1.4"/>
+                <circle class="const-dot" cx="244" cy="222" r="1.6"/>
+                <polyline class="const-line" points="22,38 48,22 70,44"/>
+                <polyline class="const-line" points="236,190 214,214 244,222"/>
+                <g class="sphere-glow">
+                    <circle class="sphere-line sphere-eq" cx="130" cy="125" r="95"/>
+                    <!-- latitudes -->
+                    <ellipse class="sphere-line" cx="130" cy="125" rx="95" ry="30"/>
+                    <ellipse class="sphere-line" cx="130" cy="83"  rx="76" ry="22"/>
+                    <ellipse class="sphere-line" cx="130" cy="167" rx="76" ry="22"/>
+                    <!-- longitudes: dashed + drifting = slow rotation -->
+                    <ellipse class="sphere-line lon"    cx="130" cy="125" rx="30" ry="95"/>
+                    <ellipse class="sphere-line lon l2" cx="130" cy="125" rx="62" ry="95"/>
+                    <ellipse class="sphere-line lon l3" cx="130" cy="125" rx="88" ry="95"/>
+                </g>
+                <text class="sphere-label" x="130" y="244" text-anchor="middle">THE CELESTIAL SPHERE</text>
+            </svg>
+        </div>
     </div>
-    <div class="hero-credit">Binary inspiral · merger · ringdown — artwork from my talks</div>
+
+    <div class="merger-strip">
+        <canvas id="merger" aria-hidden="true"></canvas>
+    </div>
+    <span class="merger-cap">Live: binary inspiral · merger · ringdown — and the strain it radiates</span>
 </div>
 
 <main class="wrap">
@@ -274,32 +334,24 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
                         <path d="M1,1 L7,4 L1,7" fill="none" stroke="#2e7d4f" stroke-width="1.2"/>
                     </marker>
                 </defs>
-                <!-- extraction spheres -->
                 <circle class="dg-dashed-grey" cx="170" cy="135" r="128"/>
                 <circle class="dg-dashed-grey" cx="170" cy="135" r="100"/>
-                <!-- body boundary r_e -->
                 <circle cx="170" cy="135" r="72" fill="#101321" stroke="#dba83f" stroke-width="2.5"/>
                 <text class="dg-math" x="170" y="52" text-anchor="middle" fill="#b8862f">r<tspan font-size="9" dy="3">e</tspan></text>
-                <!-- source region R -->
                 <circle cx="170" cy="135" r="32" fill="#4a9fd8"/>
                 <text class="dg-text" x="170" y="158" text-anchor="middle" fill="#fff">Source</text>
                 <text class="dg-math" x="139" y="112" text-anchor="end" fill="#2c7fb8">R</text>
-                <!-- origin -->
                 <circle cx="170" cy="135" r="4.5" fill="#101321"/>
                 <circle cx="170" cy="135" r="4.5" fill="none" stroke="#fff" stroke-width="1"/>
-                <!-- source point x' -->
                 <circle cx="152" cy="115" r="3.5" fill="#e8833a"/>
                 <text class="dg-math" x="142" y="110" text-anchor="end">x′</text>
-                <!-- observer -->
                 <circle cx="398" cy="92" r="6.5" fill="#2e7d4f"/>
                 <text class="dg-math" x="398" y="76" text-anchor="middle" font-weight="bold">x</text>
                 <text class="dg-math-sm" x="408" y="106">|x| &gt; R</text>
-                <!-- vectors -->
                 <line class="dg-arrow-green" x1="176" y1="132" x2="388" y2="95"/>
                 <text class="dg-math-sm" x="285" y="128" text-anchor="middle" fill="#2e7d4f">r = |x|</text>
                 <line class="dg-arrow-green-d" x1="156" y1="113" x2="388" y2="90"/>
                 <text class="dg-math-sm" x="268" y="89" text-anchor="middle" fill="#2e7d4f">|x − x′|</text>
-                <!-- multipole ladder -->
                 <line class="dg-dashed-grey" x1="40" y1="305" x2="420" y2="305" stroke-width="2.5"/>
                 <path d="M420,305 l-9,-4.5 v9 z" fill="#b9b9b2"/>
                 <circle cx="80"  cy="305" r="5" fill="#1f4e79"/>
@@ -333,16 +385,13 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
                         <path d="M1,1 L7,4 L1,7" fill="none" stroke="#1d1f29" stroke-width="1.1"/>
                     </marker>
                 </defs>
-                <!-- axes -->
                 <line class="dg-arrow" x1="58" y1="390" x2="660" y2="390"/>
                 <line class="dg-arrow" x1="58" y1="390" x2="58" y2="38"/>
                 <text class="dg-math" x="676" y="394">ℓ</text>
                 <text class="dg-math" x="40" y="32">Gⁿ</text>
-                <!-- row labels -->
                 <text class="dg-math" x="40" y="334" text-anchor="end">G¹</text>
                 <text class="dg-math" x="40" y="219" text-anchor="end">G²</text>
                 <text class="dg-math" x="40" y="104" text-anchor="end">G³</text>
-                <!-- G1 row: y 300..360 -->
                 <g>
                     <rect class="box-1pm" x="80"  y="300" width="100" height="62"/>
                     <text class="dg-math" x="130" y="326" text-anchor="middle" font-size="16">M</text>
@@ -360,7 +409,6 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
                     <text class="dg-math" x="594" y="326" text-anchor="middle" font-size="16">Mᵃᵇᶜ</text>
                     <text class="dg-math-sm" x="594" y="348" text-anchor="middle">Mᵃᵇᶜ/r⁵</text>
                 </g>
-                <!-- G2 row: y 185..247 -->
                 <g>
                     <rect class="box-2pm" x="80"  y="185" width="100" height="62"/>
                     <text class="dg-math" x="130" y="211" text-anchor="middle" font-size="16">M²</text>
@@ -378,15 +426,12 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
                     <text class="dg-math" x="594" y="211" text-anchor="middle" font-size="15">MᵃᵇMᶜᵈ</text>
                     <text class="dg-math-sm" x="594" y="233" text-anchor="middle">M²ᵃᵇ/r⁶</text>
                 </g>
-                <!-- GR mixes multipoles arrow -->
                 <line class="dg-arrow-warm" x1="232" y1="292" x2="338" y2="254"/>
                 <text class="dg-text" x="196" y="278" fill="#a8763e">GR mixes</text>
                 <text class="dg-text" x="196" y="291" fill="#a8763e">multipoles</text>
-                <!-- G3 row -->
                 <rect class="box-3pm" x="80" y="70" width="564" height="58"/>
                 <text class="dg-math" x="362" y="95" text-anchor="middle" font-size="13.5">M³, M·M²ᵃᵇ, M·S², M·Mᵃᵇᶜ, Sᵃᵇᶜ, …</text>
                 <text class="dg-text" x="362" y="115" text-anchor="middle" fill="#6b6e7b">recursive — rapidly growing</text>
-                <!-- ell axis dots -->
                 <circle cx="130" cy="390" r="4.5" fill="#1f4e79"/>
                 <circle cx="246" cy="390" r="4.5" fill="#1f6f6a"/>
                 <circle cx="362" cy="390" r="4.5" fill="#7a1f1f"/>
@@ -397,7 +442,6 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
                 <text class="dg-math-sm" x="362" y="410" text-anchor="middle">ℓ = 2</text>
                 <text class="dg-math-sm" x="478" y="410" text-anchor="middle">ℓ = 3</text>
                 <text class="dg-math-sm" x="594" y="410" text-anchor="middle">ℓ = 4</text>
-                <!-- legend -->
                 <rect class="box-1pm" x="150" y="436" width="16" height="16"/>
                 <text class="dg-text" x="174" y="448">Linear in multipole (1PM)</text>
                 <rect class="box-2pm" x="390" y="436" width="16" height="16"/>
@@ -447,7 +491,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 
             <div class="concept reveal">
                 <dt>Gravitational memory effect</dt>
-                <dd><p>The passage of gravitational waves produces a permanent shift in the relative positions of a pair of inertial detectors. The peak sensitivities of <a href="https://www.ligo.caltech.edu/">LIGO</a> and <a href="https://lisa.nasa.gov/">LISA</a> may capture the memory's rise during a binary black hole merger — the inspiral, merger, and ringdown pictured at the top of this page.</p></dd>
+                <dd><p>The passage of gravitational waves produces a permanent shift in the relative positions of a pair of inertial detectors. The peak sensitivities of <a href="https://www.ligo.caltech.edu/">LIGO</a> and <a href="https://lisa.nasa.gov/">LISA</a> may capture the memory's rise during a binary black hole merger — the inspiral, merger, and ringdown animated at the top of this page.</p></dd>
             </div>
 
             <div class="concept reveal">
@@ -571,7 +615,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
                 <span class="talk-when">Aug 2025 · 2nd APCTP–INPP Demokritos Meeting — APCTP, Pohang (invited)</span>
             </li>
         </ul>
-        <p class="note-small" style="margin-top:.9rem;">A full list of talks, conferences, and research visits is in the <a href="Tabasum_CV.pdf">CV</a>.</p>
+        <p class="note-small" style="margin-top:.9rem;">A full list of talks, conferences, and research visits is in the <a href="CV_Tabasum_26.pdf">CV</a>.</p>
     </section>
 
     <!-- ================= CONTACT ================= -->
@@ -581,6 +625,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
         <ul class="contact-list">
             <li><span class="label">Email</span> <a href="mailto:trahnuma03@gmail.com">trahnuma03@gmail.com</a> · <a href="mailto:tabasum03@kias.re.kr">tabasum03@kias.re.kr</a></li>
             <li><span class="label">Affiliation</span> Quantum Universe Center, Korea Institute for Advanced Study, Seoul, South Korea</li>
+            <li><span class="label">CV</span> <a href="CV_Tabasum_26.pdf">Curriculum Vitae (PDF)</a></li>
             <li><span class="label">Twitter</span> <a href="https://twitter.com/RahnumaTabasum">@RahnumaTabasum</a></li>
             <li><span class="label">Goodreads</span> <a href="https://t.co/u9NAGGoZTs">Reading shelf</a></li>
             <li><span class="label">iNSPIRE</span> <a href="https://inspirehep.net/authors/1955844">Author profile</a></li>
@@ -591,7 +636,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 
 <footer>
     <div class="wrap">
-        <p>© 2026 Tabasum Rahnuma · A single HTML page; diagrams hand-drawn in SVG after my talk figures.</p>
+        <p>© 2026 Tabasum Rahnuma · A single HTML page — every graphic is hand-coded SVG or a live canvas simulation; no stock images.</p>
     </div>
 </footer>
 
@@ -599,57 +644,174 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 (function () {
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* ---------- starfield over hero artwork ---------- */
-    var canvas = document.getElementById('stars');
-    var ctx = canvas.getContext('2d');
-    var stars = [];
+    /* ============ starfield + meteors ============ */
+    var sky = document.getElementById('stars');
+    var sctx = sky.getContext('2d');
+    var stars = [], meteors = [], nextMeteor = 3000;
 
-    function sizeCanvas() {
+    function sizeSky() {
         var dpr = window.devicePixelRatio || 1;
-        var r = canvas.getBoundingClientRect();
-        canvas.width = r.width * dpr;
-        canvas.height = r.height * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        seed(r.width, r.height);
+        var r = sky.getBoundingClientRect();
+        sky.width = r.width * dpr; sky.height = r.height * dpr;
+        sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        seedStars(r.width, r.height);
     }
-
-    function seed(w, h) {
+    function seedStars(w, h) {
         stars = [];
-        var n = Math.min(110, Math.floor(w * h / 11000));
-        for (var i = 0; i < n; i++) {
-            stars.push({
-                x: Math.random() * w,
-                y: Math.random() * h * 0.85,
-                r: Math.random() * 1.0 + 0.3,
-                base: Math.random() * 0.45 + 0.2,
-                phase: Math.random() * Math.PI * 2,
-                speed: Math.random() * 0.9 + 0.4
-            });
-        }
+        var n = Math.min(190, Math.floor(w * h / 6200));
+        for (var i = 0; i < n; i++) stars.push({
+            x: Math.random() * w, y: Math.random() * h * 0.9,
+            r: Math.random() * 1.1 + 0.3,
+            base: Math.random() * 0.5 + 0.25,
+            phase: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.9 + 0.4
+        });
     }
-
-    function draw(t) {
-        var r = canvas.getBoundingClientRect();
-        ctx.clearRect(0, 0, r.width, r.height);
+    function drawSky(t) {
+        var r = sky.getBoundingClientRect();
+        sctx.clearRect(0, 0, r.width, r.height);
         for (var i = 0; i < stars.length; i++) {
             var s = stars[i];
-            var a = reduced ? s.base
-                            : s.base * (0.6 + 0.4 * Math.sin(s.phase + t * 0.001 * s.speed));
-            ctx.globalAlpha = a;
-            ctx.fillStyle = '#e8ddb5';
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fill();
+            var a = reduced ? s.base : s.base * (0.6 + 0.4 * Math.sin(s.phase + t * 0.001 * s.speed));
+            sctx.globalAlpha = a; sctx.fillStyle = '#e8ddb5';
+            sctx.beginPath(); sctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); sctx.fill();
+        }
+        if (!reduced) {
+            if (t > nextMeteor) {
+                meteors.push({ x: Math.random() * r.width * 0.7 + r.width * 0.2, y: Math.random() * r.height * 0.3, vx: -3.2, vy: 1.5, life: 1 });
+                nextMeteor = t + 6000 + Math.random() * 9000;
+            }
+            for (var m = meteors.length - 1; m >= 0; m--) {
+                var mt = meteors[m];
+                sctx.globalAlpha = mt.life * 0.8;
+                sctx.strokeStyle = '#e8ddb5'; sctx.lineWidth = 1;
+                sctx.beginPath(); sctx.moveTo(mt.x, mt.y);
+                sctx.lineTo(mt.x + 26, mt.y - 12); sctx.stroke();
+                mt.x += mt.vx; mt.y += mt.vy; mt.life -= 0.018;
+                if (mt.life <= 0) meteors.splice(m, 1);
+            }
+        }
+        sctx.globalAlpha = 1;
+        if (!reduced) requestAnimationFrame(drawSky);
+    }
+    sizeSky();
+    window.addEventListener('resize', sizeSky);
+    if (reduced) { drawSky(0); } else { requestAnimationFrame(drawSky); }
+
+    /* ============ binary inspiral + live chirp ============ */
+    var cv = document.getElementById('merger');
+    var ctx = cv.getContext('2d');
+    var W = 0, H = 0, samples = [], state;
+
+    function sizeMerger() {
+        var dpr = window.devicePixelRatio || 1;
+        var r = cv.getBoundingClientRect();
+        W = r.width; H = r.height;
+        cv.width = W * dpr; cv.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        reset();
+        if (reduced) drawStatic();
+    }
+    function reset() {
+        state = {
+            phase: Math.random() * Math.PI * 2,
+            sep: 1.0,            /* normalized separation: 1 -> 0 */
+            mode: 'inspiral',    /* inspiral | ringdown | pause */
+            rd: 0,               /* ringdown clock */
+            pause: 0,
+            rings: []
+        };
+        samples = new Array(Math.floor(W)).fill(0);
+    }
+    function physicsStep() {
+        var s = state;
+        if (s.mode === 'inspiral') {
+            /* Kepler-ish: orbital frequency grows as sep shrinks */
+            var omega = 0.045 * Math.pow(Math.max(s.sep, 0.07), -1.5);
+            s.phase += omega;
+            s.sep -= 0.00075 + 0.004 * Math.pow(1 - s.sep, 3);
+            /* GW strain at twice orbital phase, amplitude ~ 1/sep */
+            var h = Math.min(1, 0.16 / Math.max(s.sep, 0.16)) * Math.cos(2 * s.phase);
+            pushSample(h);
+            if (Math.random() < 0.10 && s.sep > 0.1) s.rings.push({ r: 8, a: 0.5 });
+            if (s.sep <= 0.06) { s.mode = 'ringdown'; s.rd = 0; s.rings.push({ r: 6, a: 0.9 }); }
+        } else if (s.mode === 'ringdown') {
+            s.rd++;
+            var hr = Math.exp(-s.rd / 26) * Math.cos(0.9 * s.rd);
+            pushSample(hr);
+            if (s.rd > 130) { s.mode = 'pause'; s.pause = 0; }
+        } else {
+            s.pause++;
+            pushSample(0);
+            if (s.pause > 150) reset();
+        }
+        for (var i = state.rings.length - 1; i >= 0; i--) {
+            var rg = state.rings[i];
+            rg.r += 1.6; rg.a -= 0.008;
+            if (rg.a <= 0) state.rings.splice(i, 1);
+        }
+    }
+    function pushSample(h) { samples.push(h); if (samples.length > W) samples.shift(); }
+
+    function render() {
+        ctx.clearRect(0, 0, W, H);
+        var cx = Math.max(70, W * 0.13), cy = H / 2;
+        var s = state;
+        /* ripple rings */
+        for (var i = 0; i < s.rings.length; i++) {
+            var rg = s.rings[i];
+            ctx.globalAlpha = Math.max(rg.a, 0);
+            ctx.strokeStyle = '#7d9fe0'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(cx, cy, rg.r, 0, Math.PI * 2); ctx.stroke();
         }
         ctx.globalAlpha = 1;
-        if (!reduced) requestAnimationFrame(draw);
+        /* the binary (or remnant) */
+        if (s.mode === 'inspiral') {
+            var R = 8 + 34 * s.sep;
+            var x1 = cx + R * Math.cos(s.phase),      y1 = cy + R * 0.45 * Math.sin(s.phase);
+            var x2 = cx - R * Math.cos(s.phase),      y2 = cy - R * 0.45 * Math.sin(s.phase);
+            drawBody(x1, y1, 7); drawBody(x2, y2, 5.5);
+        } else {
+            var glow = s.mode === 'ringdown' ? Math.max(0, 1 - s.rd / 40) : 0;
+            if (glow > 0) {
+                ctx.globalAlpha = glow * 0.5; ctx.fillStyle = '#cfe0ff';
+                ctx.beginPath(); ctx.arc(cx, cy, 18 + 10 * glow, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+            drawBody(cx, cy, 9);
+        }
+        /* live strain trace */
+        var x0 = cx + 52, span = W - x0 - 8, amp = H * 0.34;
+        ctx.strokeStyle = '#9fc0ee'; ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        var n = samples.length, start = Math.max(0, n - span);
+        for (var k = start; k < n; k++) {
+            var px = x0 + (k - start);
+            var py = cy + samples[k] * amp;
+            if (k === start) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+    }
+    function drawBody(x, y, r) {
+        ctx.fillStyle = '#0c101f';
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#9fc0ee'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+    }
+    function loop() { physicsStep(); render(); requestAnimationFrame(loop); }
+
+    function drawStatic() {
+        /* reduced motion: one full precomputed chirp + static binary */
+        reset();
+        for (var i = 0; i < W * 1.2; i++) physicsStep();
+        render();
     }
 
-    sizeCanvas();
-    window.addEventListener('resize', sizeCanvas);
-    if (reduced) { draw(0); } else { requestAnimationFrame(draw); }
+    sizeMerger();
+    window.addEventListener('resize', sizeMerger);
+    if (!reduced) requestAnimationFrame(loop);
 
-    /* ---------- scroll reveal ---------- */
+    /* ============ scroll reveal ============ */
     if (!reduced && 'IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
