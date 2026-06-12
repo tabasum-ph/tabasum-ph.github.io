@@ -12,28 +12,21 @@
 
 <style>
 :root {
+    --night: #0b0e1c;
+    --night-2: #131831;
     --paper: #fbfbf8;
     --ink: #1d1f29;
     --muted: #5d6070;
     --accent: #2c3a8c;
+    --star: #e8ddb5;
+    --sky-line: #5b6bb5;
     --hairline: #e2e1d9;
     --serif: "STIX Two Text", "Times New Roman", serif;
     --sans: "IBM Plex Sans", system-ui, sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-    :root {
-        --paper: #14161f;
-        --ink: #e8e8e2;
-        --muted: #9a9dac;
-        --accent: #93a8e8;
-        --hairline: #2a2d3c;
-    }
-}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
     background: var(--paper);
     color: var(--ink);
@@ -44,38 +37,87 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 44rem; margin: 0 auto; padding: 0 1.25rem; }
 
-.wrap { max-width: 42rem; margin: 0 auto; padding: 0 1.25rem; }
-
-/* ---------- header / nav ---------- */
-header {
-    border-bottom: 1px solid var(--hairline);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    backdrop-filter: blur(6px);
-    z-index: 10;
+/* ============ HERO: the night sky ============ */
+.hero {
+    position: relative;
+    background: linear-gradient(180deg, var(--night) 0%, var(--night-2) 78%, var(--paper) 100%);
+    color: #eceadf;
+    overflow: hidden;
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
 }
-.bar {
-    max-width: 42rem; margin: 0 auto; padding: 0 1.25rem;
+#stars {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+}
+.hero-nav {
+    position: relative; z-index: 3;
     display: flex; flex-wrap: wrap; gap: .4rem 1.4rem;
     align-items: baseline; justify-content: space-between;
+    max-width: 60rem; margin: 0 auto; width: 100%;
+    padding: 1.1rem 1.5rem;
 }
-.bar .name { font-weight: 600; font-size: 1.02rem; letter-spacing: .01em; color: var(--ink); }
-nav { display: flex; flex-wrap: wrap; gap: 1.1rem; }
-nav a {
-    font-family: var(--sans); font-size: .82rem; letter-spacing: .04em;
-    color: var(--muted);
-}
-nav a:hover { color: var(--accent); text-decoration: none; }
+.hero-nav .name { font-family: var(--sans); font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; color: #cfd3e8; }
+.hero-nav nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+.hero-nav nav a { font-family: var(--sans); font-size: .8rem; letter-spacing: .05em; color: #aab1d6; }
+.hero-nav nav a:hover { color: var(--star); text-decoration: none; }
 
-/* ---------- sections ---------- */
-section { padding: 3.2rem 0 0.4rem; }
+.hero-inner {
+    position: relative; z-index: 2;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 2rem;
+    align-items: center;
+    max-width: 60rem; margin: 0 auto; width: 100%;
+    padding: 1.5rem 1.5rem 4.5rem;
+}
+.hero h1 {
+    font-size: clamp(2.1rem, 5.5vw, 3.2rem);
+    font-weight: 600; line-height: 1.12;
+    margin: .6rem 0 .9rem;
+}
+.hero .eyebrow {
+    font-family: var(--sans); font-size: .74rem; font-weight: 500;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--star);
+}
+.hero .tagline { font-size: 1.12rem; color: #c6cadf; max-width: 30rem; font-style: italic; }
+.hero .affil { font-family: var(--sans); font-size: .85rem; color: #8e95b8; margin-top: 1.1rem; }
+.hero-cta { margin-top: 1.6rem; display: flex; gap: .8rem; flex-wrap: wrap; }
+.hero-cta a {
+    font-family: var(--sans); font-size: .85rem; letter-spacing: .03em;
+    padding: .5rem 1rem; border: 1px solid #3a4373; color: #dfe2f2;
+}
+.hero-cta a:hover { border-color: var(--star); color: var(--star); text-decoration: none; }
+
+/* celestial sphere */
+.sphere-box { display: flex; justify-content: center; }
+.sphere-box svg { width: min(300px, 70vw); height: auto; overflow: visible; }
+.sphere-line { fill: none; stroke: var(--sky-line); stroke-width: .8; opacity: .55; }
+.sphere-eq { stroke: var(--star); stroke-width: 1; opacity: .85; }
+.sphere-glow { animation: breathe 7s ease-in-out infinite; transform-origin: center; }
+@keyframes breathe { 0%,100% { opacity:.85 } 50% { opacity:.45 } }
+@media (prefers-reduced-motion: reduce) { .sphere-glow { animation: none; } }
+.sphere-label { font-family: var(--sans); font-size: 10px; fill: #8e95b8; letter-spacing: .08em; }
+
+/* chirp waveform strip at hero base */
+.chirp-strip {
+    position: relative; z-index: 2;
+    max-width: 60rem; margin: 0 auto; width: 100%;
+    padding: 0 1.5rem 1.2rem;
+}
+.chirp-strip svg { width: 100%; height: 64px; display: block; }
+#chirp-path { fill: none; stroke: var(--star); stroke-width: 1.3; opacity: .9; }
+.chirp-cap { font-family: var(--sans); font-size: .7rem; color: #7e85a8; letter-spacing: .08em; text-transform: uppercase; }
+
+/* ============ BODY SECTIONS ============ */
+section { padding: 3.4rem 0 .6rem; }
 section:last-of-type { padding-bottom: 3rem; }
-h1, h2 { font-weight: 600; line-height: 1.25; }
-h1 { font-size: 1.9rem; margin-bottom: .4rem; }
-h2 { font-size: 1.35rem; margin-bottom: 1.1rem; }
+h2 { font-size: 1.45rem; font-weight: 600; margin-bottom: 1.1rem; }
 .eyebrow {
     font-family: var(--sans); font-size: .72rem; font-weight: 500;
     letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
@@ -83,63 +125,59 @@ h2 { font-size: 1.35rem; margin-bottom: 1.1rem; }
 }
 p { margin-bottom: 1rem; }
 .muted { color: var(--muted); }
-[id] { scroll-margin-top: 4.5rem; }
+[id] { scroll-margin-top: 1.5rem; }
 
-/* ---------- intro ---------- */
-.intro-grid { display: flex; gap: 1.6rem; align-items: flex-start; flex-wrap: wrap; }
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* intro */
+.intro-grid { display: flex; gap: 1.7rem; align-items: flex-start; flex-wrap: wrap; }
 .portrait {
-    width: 132px; height: 160px; object-fit: cover;
+    width: 138px; height: 168px; object-fit: cover;
     border: 1px solid var(--hairline);
-    filter: grayscale(12%);
+    box-shadow: 6px 6px 0 0 rgba(44,58,140,.12);
     flex: none;
 }
 .intro-text { flex: 1; min-width: 16rem; }
-.affil { font-family: var(--sans); font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
-.cv-link {
-    font-family: var(--sans); font-size: .85rem;
-    border: 1px solid var(--hairline); padding: .35rem .7rem;
-    display: inline-block; margin-top: .2rem;
-}
-.cv-link:hover { border-color: var(--accent); text-decoration: none; }
 
-/* ---------- concept glossary ---------- */
-.concept { border-left: 2px solid var(--hairline); padding: .15rem 0 .15rem 1.1rem; margin: 1.4rem 0; }
+/* concept glossary with figures */
+.concept {
+    border-left: 2px solid var(--hairline);
+    padding: .2rem 0 .2rem 1.15rem; margin: 1.5rem 0;
+}
 .concept dt {
     font-family: var(--sans); font-size: .8rem; font-weight: 500;
     letter-spacing: .09em; text-transform: uppercase; color: var(--accent);
-    margin-bottom: .3rem;
+    margin-bottom: .35rem;
 }
 .concept dd { margin: 0; }
 .concept dd p { margin-bottom: .4rem; }
 
-/* ---------- IR triangle figure ---------- */
-figure.ir {
-    margin: 2rem auto; text-align: center;
+figure.diagram { margin: 1.6rem auto; text-align: center; }
+figure.diagram svg { max-width: 340px; width: 100%; height: auto; }
+figure.diagram figcaption {
+    font-family: var(--sans); font-size: .78rem; color: var(--muted); margin-top: .5rem;
+    max-width: 28rem; margin-left: auto; margin-right: auto;
 }
-figure.ir svg { max-width: 320px; width: 100%; height: auto; }
-figure.ir figcaption {
-    font-family: var(--sans); font-size: .78rem; color: var(--muted);
-    margin-top: .5rem;
-}
-.ir text { font-family: var(--sans); font-size: 11px; fill: var(--ink); }
-.ir .edge { stroke: var(--accent); stroke-width: 1.2; fill: none; marker-start: url(#a1); marker-end: url(#a2); }
-.ir .vertexdot { fill: var(--accent); }
+.dg-line { stroke: var(--accent); stroke-width: 1.2; fill: none; }
+.dg-dashed { stroke: var(--accent); stroke-width: 1; fill: none; stroke-dasharray: 4 4; opacity: .65; }
+.dg-text { font-family: var(--sans); font-size: 11px; fill: var(--ink); }
+.dg-text-math { font-family: var(--serif); font-style: italic; font-size: 13px; fill: var(--ink); }
+.dg-dot { fill: var(--accent); }
+.dg-fill { fill: rgba(44,58,140,.05); stroke: none; }
 
-/* ---------- notes & publications ---------- */
+/* notes & publications */
 .doc-list { list-style: none; }
-.doc-list li { padding: .85rem 0; border-bottom: 1px solid var(--hairline); }
+.doc-list li { padding: .9rem 0; border-bottom: 1px solid var(--hairline); }
 .doc-list li:first-child { border-top: 1px solid var(--hairline); }
-.doc-title { display: block; }
 .doc-meta { font-family: var(--sans); font-size: .78rem; color: var(--muted); letter-spacing: .03em; }
-.pub-year {
-    font-family: var(--sans); font-size: .78rem; color: var(--muted);
-    display: inline-block; min-width: 3.2rem;
-}
-.pub { display: flex; gap: .4rem; align-items: baseline; }
+.pub { display: flex; gap: .6rem; align-items: baseline; }
+.pub-year { font-family: var(--sans); font-size: .78rem; color: var(--muted); min-width: 3.1rem; }
 .pub-body { flex: 1; }
 .note-small { font-size: .9rem; font-style: italic; color: var(--muted); }
 
-/* ---------- contact ---------- */
+/* contact */
 .contact-list { list-style: none; }
 .contact-list li { padding: .35rem 0; }
 .contact-list .label {
@@ -148,24 +186,25 @@ figure.ir figcaption {
     display: inline-block; min-width: 6.5rem;
 }
 
-footer {
-    border-top: 1px solid var(--hairline);
-    padding: 1.4rem 0 2.5rem;
-}
+footer { border-top: 1px solid var(--hairline); padding: 1.4rem 0 2.6rem; }
 footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); margin: 0; }
 
-@media (max-width: 480px) {
-    body { font-size: 1.02rem; }
-    h1 { font-size: 1.6rem; }
-    .portrait { width: 108px; height: 132px; }
+@media (max-width: 720px) {
+    .hero-inner { grid-template-columns: 1fr; padding-bottom: 2.5rem; }
+    .sphere-box { order: -1; }
+    .sphere-box svg { width: min(210px, 56vw); }
+    .hero { min-height: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <div class="bar">
+<!-- ================= HERO ================= -->
+<div class="hero" id="top">
+    <canvas id="stars" aria-hidden="true"></canvas>
+
+    <div class="hero-nav">
         <span class="name">Tabasum Rahnuma</span>
         <nav aria-label="Sections">
             <a href="#about">About</a>
@@ -175,92 +214,145 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
             <a href="#contact">Contact</a>
         </nav>
     </div>
-</header>
+
+    <div class="hero-inner">
+        <div>
+            <span class="eyebrow">Theoretical physicist · Celestial holography</span>
+            <h1>The sky is the&nbsp;boundary.</h1>
+            <p class="tagline">Reading the gravitational physics of our four-dimensional universe off a conformal field theory on the celestial sphere.</p>
+            <p class="affil">Postdoctoral researcher, Asia Pacific Center for Theoretical Physics (APCTP), Pohang</p>
+            <div class="hero-cta">
+                <a href="#research">Explore the research</a>
+                <a href="Tabasum_CV.pdf">Curriculum Vitae</a>
+            </div>
+        </div>
+
+        <!-- celestial sphere wireframe -->
+        <div class="sphere-box" aria-hidden="true">
+            <svg viewBox="0 0 240 240">
+                <g class="sphere-glow">
+                    <circle class="sphere-line sphere-eq" cx="120" cy="120" r="95"/>
+                    <!-- latitudes -->
+                    <ellipse class="sphere-line" cx="120" cy="120" rx="95" ry="30"/>
+                    <ellipse class="sphere-line" cx="120" cy="78"  rx="76" ry="22"/>
+                    <ellipse class="sphere-line" cx="120" cy="162" rx="76" ry="22"/>
+                    <!-- longitudes -->
+                    <ellipse class="sphere-line" cx="120" cy="120" rx="30" ry="95"/>
+                    <ellipse class="sphere-line" cx="120" cy="120" rx="62" ry="95"/>
+                    <ellipse class="sphere-line" cx="120" cy="120" rx="88" ry="95"/>
+                </g>
+                <text class="sphere-label" x="120" y="234" text-anchor="middle">THE CELESTIAL SPHERE</text>
+            </svg>
+        </div>
+    </div>
+
+    <div class="chirp-strip" aria-hidden="true">
+        <svg id="chirp" viewBox="0 0 1000 64" preserveAspectRatio="none">
+            <path id="chirp-path" d=""/>
+        </svg>
+        <span class="chirp-cap">Gravitational-wave strain — inspiral · merger · ringdown</span>
+    </div>
+</div>
 
 <main class="wrap">
 
-    <!-- ================= INTRO ================= -->
-    <section id="about">
-        <span class="eyebrow">Theoretical physicist</span>
-        <h1>Tabasum Rahnuma</h1>
-        <p class="affil">Postdoctoral researcher · Korea Institute for Advanced Studies, Seoul, South Korea</p>
-
+    <!-- ================= ABOUT ================= -->
+    <section id="about" class="reveal">
+        <span class="eyebrow">About</span>
+        <h2>Dr. Tabasum Rahnuma</h2>
         <div class="intro-grid">
             <img class="portrait" src="img/Me24.jpg" alt="Portrait of Dr. Tabasum Rahnuma">
             <div class="intro-text">
                 <p>I work in high energy physics, on gravitational and black hole physics through the lens of <strong>Celestial Holography</strong> — the proposal that gravitational physics in our four-dimensional, asymptotically flat universe is encoded in a conformal field theory living on the celestial sphere.</p>
-                <p>I completed my PhD in 2024 at the Indian Institute of Science Education and Research Bhopal (IISERB), India, under the supervision of Dr.&nbsp;Nabamita Banerjee. I now work in the group of Prof.&nbsp;Kanghoon Lee at APCTP.</p>
+                <p>I completed my PhD in 2024 at the Indian Institute of Science Education and Research Bhopal (IISERB), India, under the supervision of Dr.&nbsp;Nabamita Banerjee. I now work in the group of Prof.&nbsp;Kanghoon Lee at APCTP, Pohang, South Korea.</p>
                 <p>Away from the blackboard, I play the keyboard and spend my solitary hours reading.</p>
-                <a class="cv-link" href="Tabasum_CV.pdf">Curriculum Vitae (PDF)</a>
             </div>
         </div>
     </section>
 
-    <!-- ================= RESEARCH INTERESTS ================= -->
-    <section id="research">
+    <!-- ================= RESEARCH ================= -->
+    <section id="research" class="reveal">
         <span class="eyebrow">Research interests</span>
         <h2>Reading gravity off the sky</h2>
 
         <p>My research sits at the intersection of asymptotic symmetries, gravitational memory, and soft theorems — three faces of the infrared structure of gravity that turn out to be the same physics seen from different directions. In recent work, my collaborators and I used the celestial formalism to derive asymptotic symmetry algebras of gauge theories coupled to gravity — Einstein–Yang–Mills and Einstein–Maxwell in (3+1) dimensions — and extended the analysis to the maximally supersymmetric 𝒩&nbsp;=&nbsp;8 supergravity using double copy techniques.</p>
 
-        <figure class="ir">
-            <svg viewBox="0 0 340 240" role="img" aria-label="Triangle diagram connecting the memory effect, soft theorems, and asymptotic symmetries">
-                <defs>
-                    <marker id="a1" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse">
-                        <path d="M0.8,0.8 L6.2,3.5 L0.8,6.2" fill="none" stroke="currentColor" stroke-width="1" style="stroke: var(--accent)"/>
-                    </marker>
-                    <marker id="a2" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
-                        <path d="M0.8,0.8 L6.2,3.5 L0.8,6.2" fill="none" stroke="currentColor" stroke-width="1" style="stroke: var(--accent)"/>
-                    </marker>
-                </defs>
-                <!-- vertices: top (170,42), bottom-left (62,178), bottom-right (278,178) -->
-                <line class="edge" x1="155" y1="62"  x2="78"  y2="160"/>
-                <line class="edge" x1="185" y1="62"  x2="262" y2="160"/>
-                <line class="edge" x1="92"  y1="178" x2="248" y2="178"/>
-                <circle class="vertexdot" cx="170" cy="46"  r="3"/>
-                <circle class="vertexdot" cx="68"  cy="178" r="3"/>
-                <circle class="vertexdot" cx="272" cy="178" r="3"/>
-                <text x="170" y="30"  text-anchor="middle">Asymptotic symmetries</text>
-                <text x="68"  y="200" text-anchor="middle">Memory effect</text>
-                <text x="272" y="200" text-anchor="middle">Soft theorems</text>
+        <!-- IR triangle -->
+        <figure class="diagram reveal">
+            <svg viewBox="0 0 340 235" role="img" aria-label="Triangle connecting the memory effect, soft theorems, and asymptotic symmetries">
+                <line class="dg-line" x1="155" y1="60"  x2="80"  y2="158"/>
+                <line class="dg-line" x1="185" y1="60"  x2="260" y2="158"/>
+                <line class="dg-line" x1="95"  y1="176" x2="245" y2="176"/>
+                <circle class="dg-dot" cx="170" cy="44"  r="3"/>
+                <circle class="dg-dot" cx="70"  cy="176" r="3"/>
+                <circle class="dg-dot" cx="270" cy="176" r="3"/>
+                <text class="dg-text" x="170" y="28"  text-anchor="middle">Asymptotic symmetries</text>
+                <text class="dg-text" x="70"  y="200" text-anchor="middle">Memory effect</text>
+                <text class="dg-text" x="270" y="200" text-anchor="middle">Soft theorems</text>
             </svg>
-            <figcaption>The infrared triangle (Strominger, 2017): three equivalent descriptions of the low-energy physics of gravity and gauge theory.</figcaption>
+            <figcaption>The infrared triangle (Strominger, 2017): three equivalent descriptions of the low-energy physics of gravity and gauge theory. Each edge is a precise mathematical equivalence.</figcaption>
         </figure>
 
-        <p>The brief glossary below explains the key concepts; each entry stands on its own.</p>
+        <p>The glossary below explains the key concepts; each entry stands on its own.</p>
 
         <dl>
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Holographic principle</dt>
                 <dd><p>The proposal that the dynamics of a gravitational system in some number of spacetime dimensions can be described by a lower-dimensional theory without gravity living on its boundary. The sharpest realization is Maldacena's AdS/CFT correspondence, where a conformal field theory emerges on the boundary of curved anti-de Sitter space. Our universe, however, is asymptotically flat — which calls for a different holographic dictionary.</p></dd>
             </div>
 
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Celestial holography &amp; CCFT</dt>
-                <dd><p>Celestial Holography describes the physics of four-dimensional asymptotically flat Minkowski spacetime in terms of a quantum field theory on its boundary. In the compactified Penrose diagram, the boundaries are null hypersurfaces with a sphere at each point — so, in effect, we look at the sky to learn what happens inside the four-dimensional world. The field theory on that sphere is the Celestial Conformal Field Theory (CCFT), introduced by Strominger in 2017.</p></dd>
+                <dd>
+                    <p>Celestial Holography describes the physics of four-dimensional asymptotically flat Minkowski spacetime in terms of a quantum field theory on its boundary. In the compactified Penrose diagram below, the boundaries are the null surfaces ℐ⁺ and ℐ⁻, with a sphere at every point — so, in effect, we look at the sky to learn what happens inside the four-dimensional world. The field theory on that sphere is the Celestial Conformal Field Theory (CCFT), introduced by Strominger in 2017.</p>
+                    <figure class="diagram">
+                        <svg viewBox="0 0 300 270" role="img" aria-label="Penrose diagram of Minkowski spacetime with null infinities labeled">
+                            <!-- diamond: i+ (150,20), i0 right (270,135), i- (150,250), i0 left (30,135) -->
+                            <polygon class="dg-fill" points="150,20 270,135 150,250 30,135"/>
+                            <line class="dg-line" x1="150" y1="20"  x2="270" y2="135"/>
+                            <line class="dg-line" x1="270" y1="135" x2="150" y2="250"/>
+                            <line class="dg-line" x1="150" y1="250" x2="30"  y2="135"/>
+                            <line class="dg-line" x1="30"  y1="135" x2="150" y2="20"/>
+                            <!-- light ray at 45 degrees -->
+                            <line class="dg-dashed" x1="90" y1="195" x2="210" y2="75"/>
+                            <circle class="dg-dot" cx="150" cy="20"  r="3"/>
+                            <circle class="dg-dot" cx="150" cy="250" r="3"/>
+                            <circle class="dg-dot" cx="30"  cy="135" r="3"/>
+                            <circle class="dg-dot" cx="270" cy="135" r="3"/>
+                            <text class="dg-text-math" x="150" y="12"  text-anchor="middle">i⁺</text>
+                            <text class="dg-text-math" x="150" y="266" text-anchor="middle">i⁻</text>
+                            <text class="dg-text-math" x="16"  y="139">i⁰</text>
+                            <text class="dg-text-math" x="276" y="139">i⁰</text>
+                            <text class="dg-text-math" x="222" y="70">ℐ⁺</text>
+                            <text class="dg-text-math" x="222" y="206">ℐ⁻</text>
+                            <text class="dg-text" x="150" y="140" text-anchor="middle" opacity=".7">Minkowski spacetime</text>
+                        </svg>
+                        <figcaption>Penrose diagram of flat spacetime. Radiation leaves through future null infinity ℐ⁺ — the "sky" where the celestial CFT lives. The dashed line is a light ray at 45°.</figcaption>
+                    </figure>
+                </dd>
             </div>
 
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Asymptotically flat spacetime</dt>
                 <dd><p>A spacetime geometry whose curvature becomes vanishingly small at infinite distance from any massive object. Real observers — and real detectors — sit far from gravitational sources, effectively at the asymptotic boundary, which is why this regime governs what we can actually measure.</p></dd>
             </div>
 
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Asymptotic (BMS) symmetries</dt>
                 <dd><p>Symmetries are transformations of fields that leave physical observables invariant; asymptotic symmetries are those that survive far from the gravitational system. In four-dimensional asymptotically flat spacetime they form the infinite-dimensional BMS group, whose supertranslations relate the spacetime geometries before and after gravitational radiation passes.</p></dd>
             </div>
 
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Gravitational memory effect</dt>
-                <dd><p>The passage of gravitational waves produces a permanent shift in the relative positions of a pair of inertial detectors. The peak sensitivities of <a href="https://www.ligo.caltech.edu/">LIGO</a> and <a href="https://lisa.nasa.gov/">LISA</a> may capture the memory's rise during the merger and ringdown phases of a binary black hole, and memory detection already has implications for GW150914.</p></dd>
+                <dd><p>The passage of gravitational waves produces a permanent shift in the relative positions of a pair of inertial detectors — the waveform at the top of this page sweeps through exactly the inspiral, merger, and ringdown whose memory such detectors would retain. The peak sensitivities of <a href="https://www.ligo.caltech.edu/">LIGO</a> and <a href="https://lisa.nasa.gov/">LISA</a> may capture the memory's rise during a binary black hole merger, and memory detection already has implications for GW150914.</p></dd>
             </div>
 
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Soft theorems</dt>
-                <dd><p>Symmetry constraints on scattering amplitudes in the low-energy regime. When one external particle — a photon or graviton "messenger" — is taken to zero energy, the amplitude factorizes into a lower-point amplitude times a universal soft factor, independent of the theory considered. Via Ward identities on the celestial sphere, the infinite asymptotic symmetries reproduce exactly these theorems — closing the triangle above.</p></dd>
+                <dd><p>Symmetry constraints on scattering amplitudes in the low-energy regime. When one external particle — a photon or graviton "messenger" — is taken to zero energy, the amplitude factorizes into a lower-point amplitude times a universal soft factor, independent of the theory considered. Via Ward identities on the celestial sphere, the infinite asymptotic symmetries reproduce exactly these theorems — closing the infrared triangle above.</p></dd>
             </div>
 
-            <div class="concept">
+            <div class="concept reveal">
                 <dt>Double copy</dt>
                 <dd><p>A correspondence expressing gravity amplitudes as a "square" of gauge theory amplitudes. We used it to study soft and collinear limits in 𝒩&nbsp;=&nbsp;8 supergravity, importing gauge-theory technology into gravitational calculations.</p></dd>
             </div>
@@ -269,22 +361,22 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
         <p class="muted">For a non-specialist account of how symmetries probe the holographic universe, I recommend this <a href="https://www.quantamagazine.org/symmetries-reveal-clues-about-the-holographic-universe-20220112/">Quanta Magazine article</a>; its references are a good entry point to the literature.</p>
     </section>
 
-    <!-- ================= RESEARCH NOTES ================= -->
-    <section id="notes">
+    <!-- ================= NOTES ================= -->
+    <section id="notes" class="reveal">
         <span class="eyebrow">Research notes</span>
         <h2>Notes &amp; thesis</h2>
         <p>Self-contained notes that may assist researchers entering these areas.</p>
         <ul class="doc-list">
             <li>
-                <a class="doc-title" href="Spinor-Helicity.pdf">Spinor Helicity Formalism</a>
+                <a href="Spinor-Helicity.pdf">Spinor Helicity Formalism</a><br>
                 <span class="doc-meta">Lecture notes · PDF</span>
             </li>
             <li>
-                <a class="doc-title" href="Notes_on_GWMem.pdf">Gravitational Waves and Memory Effects</a>
+                <a href="Notes_on_GWMem.pdf">Gravitational Waves and Memory Effects</a><br>
                 <span class="doc-meta">Lecture notes · PDF</span>
             </li>
             <li>
-                <a class="doc-title" href="Thesis_Tabasum.pdf">Scattering in Asymptotically Flat Spacetimes and Symmetries from Holography</a>
+                <a href="Thesis_Tabasum.pdf">Scattering in Asymptotically Flat Spacetimes and Symmetries from Holography</a><br>
                 <span class="doc-meta">PhD thesis, IISER Bhopal, 2024 · PDF — the introductory chapters develop the symmetry analysis of our holographic universe in detail, with full references</span>
             </li>
         </ul>
@@ -292,7 +384,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
     </section>
 
     <!-- ================= PUBLICATIONS ================= -->
-    <section id="publications">
+    <section id="publications" class="reveal">
         <span class="eyebrow">Publications</span>
         <h2>Papers</h2>
         <ul class="doc-list">
@@ -313,7 +405,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
     </section>
 
     <!-- ================= CONTACT ================= -->
-    <section id="contact">
+    <section id="contact" class="reveal">
         <span class="eyebrow">Contact</span>
         <h2>Get in touch</h2>
         <ul class="contact-list">
@@ -329,9 +421,98 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 
 <footer>
     <div class="wrap">
-        <p>© 2026 Tabasum Rahnuma · Built as a single HTML page, no frameworks.</p>
+        <p>© 2026 Tabasum Rahnuma · A single HTML page; all diagrams are hand-drawn SVG.</p>
     </div>
 </footer>
+
+<script>
+(function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- starfield ---------- */
+    var canvas = document.getElementById('stars');
+    var ctx = canvas.getContext('2d');
+    var stars = [];
+
+    function sizeCanvas() {
+        var dpr = window.devicePixelRatio || 1;
+        var r = canvas.getBoundingClientRect();
+        canvas.width = r.width * dpr;
+        canvas.height = r.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        seed(r.width, r.height);
+    }
+
+    function seed(w, h) {
+        stars = [];
+        var n = Math.min(180, Math.floor(w * h / 6500));
+        for (var i = 0; i < n; i++) {
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h * 0.92,
+                r: Math.random() * 1.1 + 0.3,
+                base: Math.random() * 0.5 + 0.3,
+                phase: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.9 + 0.4
+            });
+        }
+    }
+
+    function draw(t) {
+        var r = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, r.width, r.height);
+        for (var i = 0; i < stars.length; i++) {
+            var s = stars[i];
+            var a = reduced ? s.base
+                            : s.base * (0.65 + 0.35 * Math.sin(s.phase + t * 0.001 * s.speed));
+            ctx.globalAlpha = a;
+            ctx.fillStyle = '#e8ddb5';
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (!reduced) requestAnimationFrame(draw);
+    }
+
+    sizeCanvas();
+    window.addEventListener('resize', sizeCanvas);
+    if (reduced) { draw(0); } else { requestAnimationFrame(draw); }
+
+    /* ---------- GW chirp path (inspiral, merger, ringdown) ---------- */
+    var W = 1000, H = 64, mid = H / 2;
+    var d = 'M0 ' + mid;
+    for (var x = 0; x <= W; x += 2) {
+        var u = x / W;
+        var y;
+        if (u < 0.72) {                       // inspiral: frequency and amplitude grow
+            var f = 4 + 34 * Math.pow(u / 0.72, 2.6);
+            var amp = 3 + 19 * Math.pow(u / 0.72, 2.2);
+            y = mid + amp * Math.sin(2 * Math.PI * f * u);
+        } else if (u < 0.78) {                // merger: peak
+            var v = (u - 0.72) / 0.06;
+            y = mid + 26 * (1 - v * 0.3) * Math.sin(2 * Math.PI * (38 + 18 * v) * u);
+        } else {                              // ringdown: damped oscillation
+            var w = (u - 0.78) / 0.22;
+            y = mid + 22 * Math.exp(-5.5 * w) * Math.sin(2 * Math.PI * 52 * u);
+        }
+        d += ' L' + x + ' ' + y.toFixed(2);
+    }
+    document.getElementById('chirp-path').setAttribute('d', d);
+
+    /* ---------- scroll reveal ---------- */
+    if (!reduced && 'IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    } else {
+        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+    }
+})();
+</script>
 
 </body>
 </html>
