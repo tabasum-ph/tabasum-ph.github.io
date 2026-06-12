@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabasum Rahnuma — Theoretical Physicist</title>
+<meta name="description" content="Dr. Tabasum Rahnuma — theoretical physicist working on Celestial Holography, asymptotic symmetries, and gravitational memory. Postdoctoral researcher at APCTP, Pohang.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --paper: #fbfbf8;
+    --ink: #1d1f29;
+    --muted: #5d6070;
+    --accent: #2c3a8c;
+    --hairline: #e2e1d9;
+    --serif: "STIX Two Text", "Times New Roman", serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #14161f;
+        --ink: #e8e8e2;
+        --muted: #9a9dac;
+        --accent: #93a8e8;
+        --hairline: #2a2d3c;
+    }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.08rem;
+    line-height: 1.65;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.wrap { max-width: 42rem; margin: 0 auto; padding: 0 1.25rem; }
+
+/* ---------- header / nav ---------- */
+header {
+    border-bottom: 1px solid var(--hairline);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(6px);
+    z-index: 10;
+}
+.bar {
+    max-width: 42rem; margin: 0 auto; padding: 0 1.25rem;
+    display: flex; flex-wrap: wrap; gap: .4rem 1.4rem;
+    align-items: baseline; justify-content: space-between;
+}
+.bar .name { font-weight: 600; font-size: 1.02rem; letter-spacing: .01em; color: var(--ink); }
+nav { display: flex; flex-wrap: wrap; gap: 1.1rem; }
+nav a {
+    font-family: var(--sans); font-size: .82rem; letter-spacing: .04em;
+    color: var(--muted);
+}
+nav a:hover { color: var(--accent); text-decoration: none; }
+
+/* ---------- sections ---------- */
+section { padding: 3.2rem 0 0.4rem; }
+section:last-of-type { padding-bottom: 3rem; }
+h1, h2 { font-weight: 600; line-height: 1.25; }
+h1 { font-size: 1.9rem; margin-bottom: .4rem; }
+h2 { font-size: 1.35rem; margin-bottom: 1.1rem; }
+.eyebrow {
+    font-family: var(--sans); font-size: .72rem; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+    display: block; margin-bottom: .5rem;
+}
+p { margin-bottom: 1rem; }
+.muted { color: var(--muted); }
+[id] { scroll-margin-top: 4.5rem; }
+
+/* ---------- intro ---------- */
+.intro-grid { display: flex; gap: 1.6rem; align-items: flex-start; flex-wrap: wrap; }
+.portrait {
+    width: 132px; height: 160px; object-fit: cover;
+    border: 1px solid var(--hairline);
+    filter: grayscale(12%);
+    flex: none;
+}
+.intro-text { flex: 1; min-width: 16rem; }
+.affil { font-family: var(--sans); font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
+.cv-link {
+    font-family: var(--sans); font-size: .85rem;
+    border: 1px solid var(--hairline); padding: .35rem .7rem;
+    display: inline-block; margin-top: .2rem;
+}
+.cv-link:hover { border-color: var(--accent); text-decoration: none; }
+
+/* ---------- concept glossary ---------- */
+.concept { border-left: 2px solid var(--hairline); padding: .15rem 0 .15rem 1.1rem; margin: 1.4rem 0; }
+.concept dt {
+    font-family: var(--sans); font-size: .8rem; font-weight: 500;
+    letter-spacing: .09em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: .3rem;
+}
+.concept dd { margin: 0; }
+.concept dd p { margin-bottom: .4rem; }
+
+/* ---------- IR triangle figure ---------- */
+figure.ir {
+    margin: 2rem auto; text-align: center;
+}
+figure.ir svg { max-width: 320px; width: 100%; height: auto; }
+figure.ir figcaption {
+    font-family: var(--sans); font-size: .78rem; color: var(--muted);
+    margin-top: .5rem;
+}
+.ir text { font-family: var(--sans); font-size: 11px; fill: var(--ink); }
+.ir .edge { stroke: var(--accent); stroke-width: 1.2; fill: none; marker-start: url(#a1); marker-end: url(#a2); }
+.ir .vertexdot { fill: var(--accent); }
+
+/* ---------- notes & publications ---------- */
+.doc-list { list-style: none; }
+.doc-list li { padding: .85rem 0; border-bottom: 1px solid var(--hairline); }
+.doc-list li:first-child { border-top: 1px solid var(--hairline); }
+.doc-title { display: block; }
+.doc-meta { font-family: var(--sans); font-size: .78rem; color: var(--muted); letter-spacing: .03em; }
+.pub-year {
+    font-family: var(--sans); font-size: .78rem; color: var(--muted);
+    display: inline-block; min-width: 3.2rem;
+}
+.pub { display: flex; gap: .4rem; align-items: baseline; }
+.pub-body { flex: 1; }
+.note-small { font-size: .9rem; font-style: italic; color: var(--muted); }
+
+/* ---------- contact ---------- */
+.contact-list { list-style: none; }
+.contact-list li { padding: .35rem 0; }
+.contact-list .label {
+    font-family: var(--sans); font-size: .78rem; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--muted);
+    display: inline-block; min-width: 6.5rem;
+}
+
+footer {
+    border-top: 1px solid var(--hairline);
+    padding: 1.4rem 0 2.5rem;
+}
+footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); margin: 0; }
+
+@media (max-width: 480px) {
+    body { font-size: 1.02rem; }
+    h1 { font-size: 1.6rem; }
+    .portrait { width: 108px; height: 132px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="bar">
+        <span class="name">Tabasum Rahnuma</span>
+        <nav aria-label="Sections">
+            <a href="#about">About</a>
+            <a href="#research">Research</a>
+            <a href="#notes">Notes</a>
+            <a href="#publications">Publications</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </div>
+</header>
+
+<main class="wrap">
+
+    <!-- ================= INTRO ================= -->
+    <section id="about">
+        <span class="eyebrow">Theoretical physicist</span>
+        <h1>Tabasum Rahnuma</h1>
+        <p class="affil">Postdoctoral researcher · Korea Institute for Advanced Studies, Seoul, South Korea</p>
+
+        <div class="intro-grid">
+            <img class="portrait" src="img/Me24.jpg" alt="Portrait of Dr. Tabasum Rahnuma">
+            <div class="intro-text">
+                <p>I work in high energy physics, on gravitational and black hole physics through the lens of <strong>Celestial Holography</strong> — the proposal that gravitational physics in our four-dimensional, asymptotically flat universe is encoded in a conformal field theory living on the celestial sphere.</p>
+                <p>I completed my PhD in 2024 at the Indian Institute of Science Education and Research Bhopal (IISERB), India, under the supervision of Dr.&nbsp;Nabamita Banerjee. I now work in the group of Prof.&nbsp;Kanghoon Lee at APCTP.</p>
+                <p>Away from the blackboard, I play the keyboard and spend my solitary hours reading.</p>
+                <a class="cv-link" href="Tabasum_CV.pdf">Curriculum Vitae (PDF)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= RESEARCH INTERESTS ================= -->
+    <section id="research">
+        <span class="eyebrow">Research interests</span>
+        <h2>Reading gravity off the sky</h2>
+
+        <p>My research sits at the intersection of asymptotic symmetries, gravitational memory, and soft theorems — three faces of the infrared structure of gravity that turn out to be the same physics seen from different directions. In recent work, my collaborators and I used the celestial formalism to derive asymptotic symmetry algebras of gauge theories coupled to gravity — Einstein–Yang–Mills and Einstein–Maxwell in (3+1) dimensions — and extended the analysis to the maximally supersymmetric 𝒩&nbsp;=&nbsp;8 supergravity using double copy techniques.</p>
+
+        <figure class="ir">
+            <svg viewBox="0 0 340 240" role="img" aria-label="Triangle diagram connecting the memory effect, soft theorems, and asymptotic symmetries">
+                <defs>
+                    <marker id="a1" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse">
+                        <path d="M0.8,0.8 L6.2,3.5 L0.8,6.2" fill="none" stroke="currentColor" stroke-width="1" style="stroke: var(--accent)"/>
+                    </marker>
+                    <marker id="a2" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+                        <path d="M0.8,0.8 L6.2,3.5 L0.8,6.2" fill="none" stroke="currentColor" stroke-width="1" style="stroke: var(--accent)"/>
+                    </marker>
+                </defs>
+                <!-- vertices: top (170,42), bottom-left (62,178), bottom-right (278,178) -->
+                <line class="edge" x1="155" y1="62"  x2="78"  y2="160"/>
+                <line class="edge" x1="185" y1="62"  x2="262" y2="160"/>
+                <line class="edge" x1="92"  y1="178" x2="248" y2="178"/>
+                <circle class="vertexdot" cx="170" cy="46"  r="3"/>
+                <circle class="vertexdot" cx="68"  cy="178" r="3"/>
+                <circle class="vertexdot" cx="272" cy="178" r="3"/>
+                <text x="170" y="30"  text-anchor="middle">Asymptotic symmetries</text>
+                <text x="68"  y="200" text-anchor="middle">Memory effect</text>
+                <text x="272" y="200" text-anchor="middle">Soft theorems</text>
+            </svg>
+            <figcaption>The infrared triangle (Strominger, 2017): three equivalent descriptions of the low-energy physics of gravity and gauge theory.</figcaption>
+        </figure>
+
+        <p>The brief glossary below explains the key concepts; each entry stands on its own.</p>
+
+        <dl>
+            <div class="concept">
+                <dt>Holographic principle</dt>
+                <dd><p>The proposal that the dynamics of a gravitational system in some number of spacetime dimensions can be described by a lower-dimensional theory without gravity living on its boundary. The sharpest realization is Maldacena's AdS/CFT correspondence, where a conformal field theory emerges on the boundary of curved anti-de Sitter space. Our universe, however, is asymptotically flat — which calls for a different holographic dictionary.</p></dd>
+            </div>
+
+            <div class="concept">
+                <dt>Celestial holography &amp; CCFT</dt>
+                <dd><p>Celestial Holography describes the physics of four-dimensional asymptotically flat Minkowski spacetime in terms of a quantum field theory on its boundary. In the compactified Penrose diagram, the boundaries are null hypersurfaces with a sphere at each point — so, in effect, we look at the sky to learn what happens inside the four-dimensional world. The field theory on that sphere is the Celestial Conformal Field Theory (CCFT), introduced by Strominger in 2017.</p></dd>
+            </div>
+
+            <div class="concept">
+                <dt>Asymptotically flat spacetime</dt>
+                <dd><p>A spacetime geometry whose curvature becomes vanishingly small at infinite distance from any massive object. Real observers — and real detectors — sit far from gravitational sources, effectively at the asymptotic boundary, which is why this regime governs what we can actually measure.</p></dd>
+            </div>
+
+            <div class="concept">
+                <dt>Asymptotic (BMS) symmetries</dt>
+                <dd><p>Symmetries are transformations of fields that leave physical observables invariant; asymptotic symmetries are those that survive far from the gravitational system. In four-dimensional asymptotically flat spacetime they form the infinite-dimensional BMS group, whose supertranslations relate the spacetime geometries before and after gravitational radiation passes.</p></dd>
+            </div>
+
+            <div class="concept">
+                <dt>Gravitational memory effect</dt>
+                <dd><p>The passage of gravitational waves produces a permanent shift in the relative positions of a pair of inertial detectors. The peak sensitivities of <a href="https://www.ligo.caltech.edu/">LIGO</a> and <a href="https://lisa.nasa.gov/">LISA</a> may capture the memory's rise during the merger and ringdown phases of a binary black hole, and memory detection already has implications for GW150914.</p></dd>
+            </div>
+
+            <div class="concept">
+                <dt>Soft theorems</dt>
+                <dd><p>Symmetry constraints on scattering amplitudes in the low-energy regime. When one external particle — a photon or graviton "messenger" — is taken to zero energy, the amplitude factorizes into a lower-point amplitude times a universal soft factor, independent of the theory considered. Via Ward identities on the celestial sphere, the infinite asymptotic symmetries reproduce exactly these theorems — closing the triangle above.</p></dd>
+            </div>
+
+            <div class="concept">
+                <dt>Double copy</dt>
+                <dd><p>A correspondence expressing gravity amplitudes as a "square" of gauge theory amplitudes. We used it to study soft and collinear limits in 𝒩&nbsp;=&nbsp;8 supergravity, importing gauge-theory technology into gravitational calculations.</p></dd>
+            </div>
+        </dl>
+
+        <p class="muted">For a non-specialist account of how symmetries probe the holographic universe, I recommend this <a href="https://www.quantamagazine.org/symmetries-reveal-clues-about-the-holographic-universe-20220112/">Quanta Magazine article</a>; its references are a good entry point to the literature.</p>
+    </section>
+
+    <!-- ================= RESEARCH NOTES ================= -->
+    <section id="notes">
+        <span class="eyebrow">Research notes</span>
+        <h2>Notes &amp; thesis</h2>
+        <p>Self-contained notes that may assist researchers entering these areas.</p>
+        <ul class="doc-list">
+            <li>
+                <a class="doc-title" href="Spinor-Helicity.pdf">Spinor Helicity Formalism</a>
+                <span class="doc-meta">Lecture notes · PDF</span>
+            </li>
+            <li>
+                <a class="doc-title" href="Notes_on_GWMem.pdf">Gravitational Waves and Memory Effects</a>
+                <span class="doc-meta">Lecture notes · PDF</span>
+            </li>
+            <li>
+                <a class="doc-title" href="Thesis_Tabasum.pdf">Scattering in Asymptotically Flat Spacetimes and Symmetries from Holography</a>
+                <span class="doc-meta">PhD thesis, IISER Bhopal, 2024 · PDF — the introductory chapters develop the symmetry analysis of our holographic universe in detail, with full references</span>
+            </li>
+        </ul>
+        <p class="note-small" style="margin-top:.9rem;">Suggestions for modifications and corrections to the notes are highly appreciated.</p>
+    </section>
+
+    <!-- ================= PUBLICATIONS ================= -->
+    <section id="publications">
+        <span class="eyebrow">Publications</span>
+        <h2>Papers</h2>
+        <ul class="doc-list">
+            <li class="pub">
+                <span class="pub-year">2024</span>
+                <span class="pub-body">N.&nbsp;Banerjee, T.&nbsp;Rahnuma and R.&nbsp;K.&nbsp;Singh, <em>Asymptotic symmetry algebra of 𝒩&nbsp;=&nbsp;8 supergravity</em>, <a href="https://journals.aps.org/prd/abstract/10.1103/PhysRevD.109.046010">Phys. Rev. D 109, 046010</a>.</span>
+            </li>
+            <li class="pub">
+                <span class="pub-year">2023</span>
+                <span class="pub-body">N.&nbsp;Banerjee, T.&nbsp;Rahnuma and R.&nbsp;K.&nbsp;Singh, <em>Soft and collinear limits in 𝒩&nbsp;=&nbsp;8 supergravity using double copy formalism</em>, <a href="https://link.springer.com/article/10.1007/JHEP04(2023)126">JHEP 04 (2023) 126</a>.</span>
+            </li>
+            <li class="pub">
+                <span class="pub-year">2022</span>
+                <span class="pub-body">N.&nbsp;Banerjee, T.&nbsp;Rahnuma and R.&nbsp;K.&nbsp;Singh, <em>Asymptotic symmetry of four-dimensional Einstein–Yang–Mills and Einstein–Maxwell theory</em>, <a href="https://link.springer.com/article/10.1007/JHEP01(2022)033">JHEP 01 (2022) 033</a>.</span>
+            </li>
+        </ul>
+        <p style="margin-top:.9rem;"><a href="https://inspirehep.net/authors/1955844">Complete record on iNSPIRE-HEP →</a></p>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section id="contact">
+        <span class="eyebrow">Contact</span>
+        <h2>Get in touch</h2>
+        <ul class="contact-list">
+            <li><span class="label">Email</span> <a href="mailto:trahnuma03@gmail.com">trahnuma03@gmail.com</a></li>
+            <li><span class="label">Affiliation</span> Asia Pacific Center for Theoretical Physics, Pohang, South Korea</li>
+            <li><span class="label">Twitter</span> <a href="https://twitter.com/RahnumaTabasum">@RahnumaTabasum</a></li>
+            <li><span class="label">Goodreads</span> <a href="https://t.co/u9NAGGoZTs">Reading shelf</a></li>
+            <li><span class="label">iNSPIRE</span> <a href="https://inspirehep.net/authors/1955844">Author profile</a></li>
+        </ul>
+    </section>
+
+</main>
+
+<footer>
+    <div class="wrap">
+        <p>© 2026 Tabasum Rahnuma · Built as a single HTML page, no frameworks.</p>
+    </div>
+</footer>
+
+</body>
+</html>
