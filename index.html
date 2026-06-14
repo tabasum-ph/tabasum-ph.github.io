@@ -700,11 +700,12 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 
     /* ============ binary inspiral + chirp, shaped to GW150914 ============
        Calibrated to the LIGO discovery figure (Abbott et al. 2016):
-         • frequency sweeps 35 -> 250 Hz   (factor ~7)
-         • whole visible signal ~0.15 s, most cycles slow, last 2-3 fast
+         • frequency sweeps ~30 -> 300 Hz  (factor ~10, analysis band)
+         • envelope stays FLAT through most cycles, then erupts in the last 2-3
          • peak strain AT merger, then 1-2 heavily-damped ringdown cycles
        Newtonian chirp:  f(t) = f_start * (tc/(tc - t))^(3/8),  tau = tc - t
-       Amplitude tracks  A ∝ f^(2/3),  capped at merger.
+       Amplitude  A ∝ f^(2/3) ∝ (tc - t)^(-1/4): nearly flat early, then a
+       power-law spike at merger — NOT a linear ramp.
        Ringdown:  h = e^(-t/tau_d) cos(2π f_qnm t),  f_qnm just above f_merge. */
 
     var cv = document.getElementById('merger');
@@ -720,11 +721,12 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
 
     /* physical chirp constants (dimensionless, mapped onto the window) */
     var F_START = 0.018;        /* GW freq (cycles/frame) at window start */
-    var F_RATIO = 7.14;         /* 250/35 — total frequency sweep         */
+    var F_RATIO = 10;           /* ~30->300 Hz: wider sweep => flatter early, sharper spike */
     var KCHIRP  = Math.pow(F_RATIO, 8 / 3);
     var TC      = 1 / (1 - 1 / KCHIRP);   /* coalescence time, in units of T_INSPIRAL (≈1.005) */
-    var F_QNM   = 0.30;         /* ringdown quasi-normal frequency        */
-    var TAU_DAMP = 11;          /* heavy damping -> ~1.5 ringdown cycles   */
+    /* F_MERGE, PHI_END, F_QNM, TAU are DERIVED from the chirp below, once
+       freqOf/phaseOf exist — so the ringdown joins the inspiral smoothly. */
+    var F_MERGE, PHI_END, F_QNM, TAU;
 
     function sizeMerger() {
         DPR = window.devicePixelRatio || 1;
@@ -752,19 +754,58 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
         return 2 * Math.PI * F_START * T_INSPIRAL * I;
     }
 
-    /* strain over the full cycle */
+    /* derive merger frequency, total inspiral phase, and ringdown params from
+       the chirp itself — nothing hand-set, so everything joins up at merger */
+    F_MERGE = freqOf(T_INSPIRAL);          /* GW freq at coalescence            */
+    PHI_END = phaseOf(T_INSPIRAL);         /* accumulated inspiral phase        */
+    F_QNM   = F_MERGE * 1.12;              /* QNM freq sits JUST ABOVE f_merge  */
+    TAU     = 10;                          /* ringdown e-folding (~1.5 cycles)  */
+
+    /* GW amplitude on the inspiral ∝ f^(2/3) (Newtonian quadrupole),
+       normalized so it peaks ≈ 1 right at merger */
+    function ampInsp(t) { return Math.pow(freqOf(t) / F_MERGE, 0.667); }
+
+    /* strain over the full cycle. The inspiral phase is measured BACKWARD from
+       merger (PHI_END − phaseOf), so the chirp lands exactly on a crest at
+       coalescence; the ringdown then starts from that same crest at a frequency
+       just above f_merge. Result: value, slope AND frequency are continuous
+       through merger — no kink, no sudden buzz, matching GW150914. */
     function strainOf(t) {
         if (t < T_INSPIRAL) {
-            var u = uOf(t);
-            var f = freqOf(t);
-            /* envelope grows toward merger; normalized so it peaks ~1 at merger */
-            var amp = 0.28 + 0.72 * Math.pow(u, 1.6);
-            return amp * Math.cos(phaseOf(t));
+            return ampInsp(t) * Math.cos(PHI_END - phaseOf(t));
         } else if (t < T_INSPIRAL + T_RING) {
             var dt = t - T_INSPIRAL;
-            return Math.cos(2 * Math.PI * F_QNM * dt) * Math.exp(-dt / TAU_DAMP);
+            return Math.exp(-dt / TAU) * Math.cos(2 * Math.PI * F_QNM * dt);
         }
         return 0;
+    }
+
+    /* visual orbital angle (rad). The mass quadrupole rotates at the orbital
+       rate; the radiated wave pattern rotates at TWICE this (the m=2 mode). */
+    function orbAngleAt(t) { return phaseOf(Math.max(0, Math.min(t, T_INSPIRAL))) * 0.12; }
+
+    /* Outgoing quadrupole strain pattern h(r,φ,t): a rotating TWO-ARMED (m=2)
+       spiral that propagates outward at finite speed (retarded time t−r/v),
+       grows as the binary chirps, and rings down after merger. A real binary
+       radiates THIS — not isotropic concentric rings. Quiet far from the
+       source early on, it erupts into a clear pinwheel at coalescence. */
+    var WAVE_SPEED = 0.018;   /* grid-units per frame in the wave zone */
+    function quadWave(r, phi, t) {
+        var tr = t - r / WAVE_SPEED;                  /* retarded time          */
+        if (tr <= 0) return 0;                         /* wavefront not here yet */
+        var env, ph;
+        if (tr < T_INSPIRAL) {
+            var a = ampInsp(tr);
+            env = a * a;                               /* power-like growth, faint early */
+            ph  = 2 * orbAngleAt(tr);                  /* two arms, 2× orbital   */
+        } else if (tr < T_INSPIRAL + T_RING) {
+            var dt = tr - T_INSPIRAL;
+            env = Math.exp(-dt / (TAU * 1.4));         /* burst, then decay      */
+            ph  = 2 * orbAngleAt(T_INSPIRAL) + 2 * Math.PI * F_QNM * dt;
+        } else { return 0; }
+        /* radial window: vanishes on the bodies (near zone), 1/r tail outward */
+        var win = (r * r / (r * r + 0.010)) / (1 + 3.2 * r);
+        return env * win * Math.cos(2 * phi - ph);
     }
 
     /* orbital separation (px) — Kepler: r ∝ f^(-2/3) */
@@ -800,7 +841,7 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
         ctx.fillRect(0, 0, W, H);
 
         /* orbital phase (slower than strain so the orbit is watchable) */
-        var orbPhase = phaseOf(inInspiral ? tCyc : 0) * 0.12;
+        var orbPhase = orbAngleAt(inInspiral ? tCyc : T_INSPIRAL);
 
         /* body world positions in grid space (gx,gy in [0,1]) */
         var R = inInspiral ? sepOf(tCyc) / 120 : 0;     /* normalized separation */
@@ -810,17 +851,17 @@ footer p { font-family: var(--sans); font-size: .76rem; color: var(--muted); mar
         var m1 = 1.0, m2 = inInspiral ? 0.7 : 0;        /* well strengths */
         if (!inInspiral) { m1 = inRing ? 1.6 : 0; }     /* merged remnant */
 
-        /* depth of the spacetime well at grid point (gx,gy) */
+        /* height of the spacetime sheet at (gx,gy): the static curvature wells
+           of the bodies PLUS the outgoing quadrupole radiation. The radiation
+           term is the rotating m=2 spiral, NOT concentric breathing rings. */
+        var WGAIN = 1.5;       /* visual gain on the radiated strain */
         function wellAt(gx, gy) {
             var d1 = Math.hypot(gx - b1.gx, (gy - b1.gy) * 1.3) + 0.04;
             var d2 = Math.hypot(gx - b2.gx, (gy - b2.gy) * 1.3) + 0.04;
-            var w = m1 / d1 + m2 / d2;
-            /* radiated ripples: concentric sinusoid riding outward from centre */
-            var dc = Math.hypot(gx - cgx, (gy - cgy) * 1.3);
-            var ripple = inInspiral
-                ? 0.5 * Math.sin(dc * 26 - tCyc * 0.35) * Math.exp(-dc * 3) * (0.4 + R)
-                : (inRing ? 0.8 * Math.sin(dc * 22 - (tCyc - T_INSPIRAL) * 0.5)
-                             * Math.exp(-dc * 2.4 - (tCyc - T_INSPIRAL) / 30) : 0);
+            var w = m1 / d1 + m2 / d2;                  /* curvature wells */
+            var dx = gx - cgx, dy = (gy - cgy) * 1.3;
+            var r = Math.hypot(dx, dy);
+            var ripple = WGAIN * quadWave(r, Math.atan2(dy, dx), tCyc);
             return (w * 0.09 + ripple) * WELL_DEPTH;
         }
 
